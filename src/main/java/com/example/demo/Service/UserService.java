@@ -16,13 +16,15 @@ public class UserService {
     public User saveUserIfNotExists(Map<String, Object> userInfo) {
         String kakaoId = String.valueOf(userInfo.get("id"));
         String email = (String) ((Map<String, Object>) userInfo.get("kakao_account")).get("email");
-        String nickname = (String) ((Map<String, Object>) userInfo.get("properties")).get("nickname");
+        String name = (String) ((Map<String, Object>) userInfo.get("properties")).get("nickname");
+        String profile_image = (String) ((Map<String, Object>) userInfo.get("properties")).get("profile_image");
 
         return userRepository.findByKakaoId(kakaoId).orElseGet(() -> {
             User newUser = new User();
             newUser.setKakaoId(kakaoId);
             newUser.setEmail(email);
-            newUser.setNickname(nickname);
+            newUser.setName(name);
+            newUser.setProfile_image(profile_image);
             return userRepository.save(newUser);
         });
     }

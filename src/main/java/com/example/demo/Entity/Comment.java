@@ -1,14 +1,16 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     @Id
@@ -24,7 +26,7 @@ public class Comment {
     // 대댓글의 경우 부모 댓글
     @ManyToOne
     @JoinColumn(name = "comment_id")
-    private Comment comment;
+    private Comment parent;
 
     @ManyToOne
     @JoinColumn(name = "post_id")

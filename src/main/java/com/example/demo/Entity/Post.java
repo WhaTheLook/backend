@@ -1,8 +1,7 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -11,13 +10,17 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@Table(name = "post")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String writer;
+    private String author;
     private String title;
     private String content;
     private String category;
@@ -27,8 +30,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Like> likes;
+    private long likes;
 
     @ManyToMany
     @JoinTable(
@@ -36,7 +38,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "hashtag_id")
     )
-    private Set<Hashtag> hashtags;
+    private List<Hashtag> hashtags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Photo> photos;

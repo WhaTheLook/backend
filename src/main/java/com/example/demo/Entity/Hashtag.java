@@ -1,14 +1,17 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "hashtag")
 public class Hashtag {
 
     @Id
@@ -17,6 +20,7 @@ public class Hashtag {
 
     private String name;
 
-    @ManyToMany(mappedBy = "hashtags")
-    private Set<Post> posts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 }

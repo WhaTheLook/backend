@@ -18,11 +18,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User saveUserIfNotExists(Map<String, Object> userInfo) {
+        System.out.println(userInfo);
         String kakaoId = String.valueOf(userInfo.get("id"));
         String email = (String) ((Map<String, Object>) userInfo.get("kakao_account")).get("email");
         String name = (String) ((Map<String, Object>) userInfo.get("properties")).get("nickname");
         String profile_image = (String) ((Map<String, Object>) userInfo.get("properties")).get("profile_image");
-
+        System.out.println((String) ((Map<String, Object>) userInfo.get("properties")).get("profile_image"));
         return userRepository.findByKakaoId(kakaoId).orElseGet(() -> {
             User newUser = new User();
             newUser.setKakaoId(kakaoId);

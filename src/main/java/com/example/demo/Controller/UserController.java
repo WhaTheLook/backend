@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.LoginRequest;
 import com.example.demo.DTO.UserRequest;
 import com.example.demo.DTO.UserResponse;
 import com.example.demo.Service.KakaoService;
@@ -29,11 +30,33 @@ public class UserController {
 
     @Operation(summary = "로그인", description = "카카오 인가코드를 넘기면 access, refresh 토큰을 반환합니다.")
     @Parameter(name = "code", description = "카카오 인가코드")
-    @GetMapping("/login")
-    public  ResponseEntity<Map<String, String>> kakaoLogin(@RequestParam String code) {
+    @PostMapping("/login")
+    public  ResponseEntity<Map<String, String>> kakaoLogin(@RequestBody LoginRequest login) {
 
-        String accessToken = kakaoService.getKakaoAccessToken(code);
+        String accessToken = kakaoService.getKakaoAccessToken(login.getCode());
         Map<String, Object> userInfo = kakaoService.getUserInfo(accessToken);
+        // 사용자 정보 저장 또는 갱신
+        userService.saveUserIfNotExists(userInfo);
+
+        String kakaoId = String.valueOf(userInfo.get("id")); // Kakao 사용자 ID를 username으로 사용
+        // JWT 토큰 생성
+        String jwtAccessToken = jwtUtil.generateAccessToken(kakaoId);
+        String jwtRefreshToken = jwtUtil.generateRefreshToken(kakaoId);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", jwtAccessToken);
+        tokens.put("refreshToken", jwtRefreshToken);
+
+        return ResponseEntity.ok(tokens);
+    }
+
+
+    @Operation(summary = "토큰 로그인", description = "카카오 엑세스 토큰을 넘기면 access, refresh 토큰을 반환합니다.")
+    @Parameter(name = "accessToken", description = "카카오 토큰")
+    @PostMapping("/token/login")
+    public  ResponseEntity<Map<String, String>> kakaoTokenLogin(@RequestBody LoginRequest login) {
+
+        Map<String, Object> userInfo = kakaoService.getUserInfo(login.getCode());
         // 사용자 정보 저장 또는 갱신
         userService.saveUserIfNotExists(userInfo);
 
@@ -73,7 +96,7 @@ public class UserController {
         String jwtToken = token.substring(7); // "Bearer " 이후의 토큰만 추출
         Claims claims = jwtUtil.extractAllClaims(jwtToken);
 
-        if (jwtUtil.isTokenExpired(jwtToken)) {
+        if (!jwtUtil.isTokenExpired(jwtToken)) {
             String kakaoId = claims.getSubject();
             UserResponse user = userService.getUser(kakaoId);
             return ResponseEntity.ok(user);

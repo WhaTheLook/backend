@@ -18,6 +18,5 @@ public class PostUpdateRequest {
     private String category;     // 카테고리
     private List<String> hashtags;  // 해시태그 목록
     private List<MultipartFile> photos;  // 사진 목록
-    private List<String> deleteUrl;  // 삭제될 사진 목록
 
 }

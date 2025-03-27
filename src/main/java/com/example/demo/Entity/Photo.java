@@ -11,6 +11,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "photo")
 public class Photo {
 
     @Id

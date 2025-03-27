@@ -17,4 +17,6 @@ public class UserResponse {
     private String name;
     private String profileImage;
     private Date date;
+    private Long postCount;
+    private Long commentCount;
 }

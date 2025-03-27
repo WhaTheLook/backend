@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @Table(name = "post")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,10 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author", referencedColumnName = "kakaoId")
+    private User author;
+//    private String author;
     private String title;
     private String content;
     private String category;
@@ -32,12 +35,7 @@ public class Post {
 
     private long likes;
 
-    @ManyToMany
-    @JoinTable(
-            name = "post_hashtag",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "hashtag_id")
-    )
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Hashtag> hashtags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

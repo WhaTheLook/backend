@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class PostRequest {
 
-    private String author;
+    private String kakaoId;
 
     private String title;
 

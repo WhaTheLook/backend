@@ -9,6 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserRequest {
     private String kakaoId;
     private String name;
-    private String email;
-    private String profileImage;
+    private MultipartFile profileImage;
 }

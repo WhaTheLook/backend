@@ -1,6 +1,7 @@
 package com.example.demo.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +24,16 @@ public class JWTUtil {
         return generateToken(username, (1000L * 60 * 60 * 10)); // 10 hours
     }
 
+    public String testGenerateAccessToken(String username) {
+        return generateToken(username, (1000L * 10 )); // 10 s
+    }
+
     public String generateRefreshToken(String username) {
         return generateToken(username, (1000L * 60 * 60 * 24 * 30)); // 30 days
+    }
+
+    public String testGenerateRefreshToken(String username) {
+        return generateToken(username, (1000L * 30)); // 30 s
     }
 
     public String generateToken(String username, long validity) {
@@ -49,7 +58,12 @@ public class JWTUtil {
     }
 
     public boolean isTokenExpired(String token) {
-        return extractAllClaims(token).getExpiration().before(new Date());
+        try{
+            extractAllClaims(token).getExpiration().before(new Date());
+            return false;
+        }catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public boolean validateToken(String token, String username) {

@@ -8,9 +8,10 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "comment")
 public class Comment {
 
     @Id
@@ -18,8 +19,10 @@ public class Comment {
     private Long id;
 
     private String text;
-    private int depth;
-    private int order;
+//    private int depth;
+    private Long targetId;
+    private boolean accept;
+//    private int order;
     private Date date;
     private Boolean deleteYN;
 
@@ -34,6 +37,7 @@ public class Comment {
 
     // Comment를 작성한 사용자 정보 추가 (예: User 엔티티와의 관계)
      @ManyToOne
-     @JoinColumn(name = "user_id")
+     @JoinColumn(name = "kakaoId")  // Comment 테이블의 컬럼 명
+     // 식제 저장 값은 kakao Id 가 아닌 user ID
      private User user;
 }

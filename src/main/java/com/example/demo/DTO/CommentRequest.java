@@ -8,4 +8,5 @@ public class CommentRequest {
     private Long userId;
     private Long parentId;
     private String text;
+    private Long targetId;
 }
